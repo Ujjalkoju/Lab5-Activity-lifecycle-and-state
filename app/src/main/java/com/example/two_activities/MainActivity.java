@@ -3,39 +3,72 @@ package com.example.two_activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
-    private Button btn_count;
-    private TextView counter;
-    private int count=0;
+    public static final int TEXT_REQUEST = 1;
+    private TenLists items = new TenLists();
+    public MainActivity() {
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btn_count=findViewById(R.id.button);
-        counter=findViewById(R.id.Count_view);
-        btn_count.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                count=count+1;
-                counter.setText(""+count);
+
+        Intent intent = getIntent();
+        if ((savedInstanceState != null)&& (savedInstanceState.getSerializable("list")!= null)){
+            HashMap<String, Integer> l = (HashMap<String, Integer>)savedInstanceState.getSerializable("list");
+            TextView tv = findViewById(R.id.textView);
+            tv.setText("");
+            for (String k : l.keySet()) {
+                String s = l.get(k).toString() + " " + k + "\n";
+                tv.setText(tv.getText() + s);
+                for(int i = 0; i<l.get(k); i++){
+                    items.addItem(k);}
             }
-        });
-
-        if(savedInstanceState !=null){
-
-            int cnt=savedInstanceState.getInt("counting");
-            count=cnt;
-            counter.setText(""+count);
         }
     }
+
+    public void launchSecondActivity(View view) {
+
+        Intent intent = new Intent(this, SecondActivity.class);
+
+        startActivityForResult(intent, TEXT_REQUEST);
+    }
+
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("counting",count);
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putSerializable("list", items.getItems());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == TEXT_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                String item = data.getStringExtra(SecondActivity.EXTRA_MESSAGE);
+                items.addItem(item);
+            }
+            drawView();
+        }
+    }
+
+    public void drawView() {
+        HashMap<String, Integer> l = items.getItems();
+        TextView tv = findViewById(R.id.textView);
+        tv.setText("");
+        for (String k : l.keySet()) {
+            String s = l.get(k).toString() + " " + k + "\n";
+            tv.setText(tv.getText() + s);
+        }
     }
 }

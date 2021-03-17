@@ -1,7 +1,9 @@
 # Lab5: Activity lifecycle and state
-### Homework
-### portrait 
-![](./Homework1.jpg)
-### Count and text restored in landscape
-![](./Homework2.jpg)
+### Coding Challenge
+### MainActivity App Screenshot 
+![](./code1.jpg)
+### SecondActivity Item lists
+![](./code2.jpg)
+### Added Item lists
+![](./code3.jpg)
 
