@@ -4,4 +4,6 @@
 ![](./Homework1.jpg)
 ### Count and text restored in landscape
 ![](./Homework2.jpg)
+### GIF
+![GIF](lab5Gif.gif)
 
